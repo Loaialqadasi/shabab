@@ -64,7 +64,7 @@ $foundResult = pg_query($conn, $foundQuery);
         <p><strong>Date:</strong> <?= htmlspecialchars($row['date_lost']) ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($row['location']) ?></p>
         <p><?= htmlspecialchars($row['description']) ?></p>
-        <p><strong>Status:</strong> <?= htmlspecialchars($row['status']) ?></p>
+        <p><strong>Status:</strong> <?= isset($row['status']) && $row['status'] !== null ? htmlspecialchars($row['status']) : 'N/A' ?></p>
         <?php if (isset($_SESSION['username']) && isset($row['username']) && $_SESSION['username'] === $row['username']): ?>
           <a href="edit-lost.php?id=<?= $row['id'] ?>" class="header-link" style="margin-top:10px; display:inline-block; margin-right:10px;">Edit</a>
           <form method="POST" action="delete-report.php" onsubmit="return confirm('Are you sure you want to delete this report?');" class="inline-form" style="display:inline;">
@@ -88,7 +88,7 @@ $foundResult = pg_query($conn, $foundQuery);
         <p><strong>Date:</strong> <?= htmlspecialchars($row['date_found']) ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($row['location']) ?></p>
         <p><?= htmlspecialchars($row['description']) ?></p>
-        <p><strong>Status:</strong> <?= htmlspecialchars($row['status']) ?></p>
+        <p><strong>Status:</strong> <?= isset($row['status']) && $row['status'] !== null ? htmlspecialchars($row['status']) : 'N/A' ?></p>
         <?php if (isset($_SESSION['username']) && isset($row['username']) && $_SESSION['username'] === $row['username']): ?>
           <a href="edit-found.php?id=<?= $row['id'] ?>" class="header-link" style="margin-top:10px; display:inline-block; margin-right:10px;">Edit</a>
           <form method="POST" action="delete-report.php" onsubmit="return confirm('Are you sure you want to delete this report?');" class="inline-form" style="display:inline;">
