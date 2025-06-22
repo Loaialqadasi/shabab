@@ -1,6 +1,6 @@
 -- USERS
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL
@@ -8,7 +8,7 @@ CREATE TABLE users (
 
 -- LOST ITEMS
 CREATE TABLE lost_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     item_name VARCHAR(100) NOT NULL,
     description TEXT,
     date_lost DATE,
@@ -19,7 +19,7 @@ CREATE TABLE lost_items (
 
 -- FOUND ITEMS
 CREATE TABLE found_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     item_name VARCHAR(100) NOT NULL,
     description TEXT,
     date_found DATE,
@@ -30,7 +30,7 @@ CREATE TABLE found_items (
 
 -- CHAT MESSAGES
 CREATE TABLE chat_messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     sender VARCHAR(20) NOT NULL, -- 'user' or 'bot'
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
