@@ -1,6 +1,6 @@
 <?php
 // PostgreSQL credentials for Render.com
-$host = 'dpg-d1bqnqodl3ps73eupri0-a.oregon-postgres.render.com';
+$host = 'dpg-d1bqnqodl3ps73eupri0-a';
 $port = '5432';
 $dbname = 'shabab';
 $user = 'lostandfound';
