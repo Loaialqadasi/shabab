@@ -1,35 +1,111 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+session_start();
+include 'db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Search Items | Shabab Lost & Found Assistant</title>
+  <title>Search - Shabab Lost & Found Assistant</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header><b>Shabab Lost & Found Assistant</b></header>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="login.html">Login</a>
-    <a href="register.html">Register</a>
-    <a href="report-lost.html">Report Lost</a>
-    <a href="report-found.html">Report Found</a>
-    <a href="search.html">Search</a>
-  </nav>
-  <main>
-    <h2>Search Lost/Found Items</h2>
-    <form id="search-form" action="search.php" method="GET">
-      <input type="text" name="query" placeholder="Search for items...">
-      <select name="type">
-        <option value="lost">Lost</option>
-        <option value="found">Found</option>
-      </select>
-      <button type="submit">Search</button>
-    </form>
-    <div id="search-results">
-   
+
+<?php include 'header.php'; ?>
+
+<main>
+  <h2>Search Lost & Found Items</h2>
+
+  <!-- Search Form -->
+  <form method="GET" action="search.php" id="search-form" style="margin-bottom: 20px;">
+    <input type="text" name="query" placeholder="Search for items..." required value="<?= htmlspecialchars($_GET['query'] ?? '') ?>">
+
+    <select name="type" required>
+      <option value="lost" <?= (isset($_GET['type']) && $_GET['type'] === 'lost') ? 'selected' : '' ?>>Lost</option>
+      <option value="found" <?= (isset($_GET['type']) && $_GET['type'] === 'found') ? 'selected' : '' ?>>Found</option>
+    </select>
+
+    <select name="status">
+      <option value="">All Statuses</option>
+      <option value="unresolved" <?= (isset($_GET['status']) && $_GET['status'] === 'unresolved') ? 'selected' : '' ?>>Unresolved</option>
+      <option value="resolved" <?= (isset($_GET['status']) && $_GET['status'] === 'resolved') ? 'selected' : '' ?>>Resolved</option>
+    </select>
+
+    <button type="submit">Search</button>
+  </form>
+
+<?php
+$results = false;
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['query']) && isset($_GET['type'])) {
+    $query = "%" . trim($_GET['query']) . "%";
+    $type = $_GET['type'];
+    $status = $_GET['status'] ?? '';
+
+    if ($type === 'lost') {
+        $sql = "SELECT * FROM lost_items WHERE (item_name ILIKE $1 OR description ILIKE $2)";
+    } else {
+        $sql = "SELECT * FROM found_items WHERE (item_name ILIKE $1 OR description ILIKE $2)";
+    }
+
+    $params = [$query, $query];
+
+    if ($status === 'resolved' || $status === 'unresolved') {
+        $sql .= " AND status = $3";
+        $params[] = $status;
+    }
+
+    $results = pg_query_params($conn, $sql, $params);
+}
+?>
+
+<div id="search-results">
+<?php if (isset($_GET['deleted'])): ?>
+  <p style="color: green;">Report successfully deleted.</p>
+<?php endif; ?>
+
+<?php if ($results && pg_num_rows($results) > 0): ?>
+  <?php while ($row = pg_fetch_assoc($results)): ?>
+    <div class="report-card <?= $type === 'lost' ? 'red-box' : 'orange-box' ?>">
+      <div class="item-label <?= $type === 'lost' ? 'lost-label' : 'found-label' ?>">
+        <?= $type === 'lost' ? '🆘 LOST' : '🔍 FOUND' ?>
+      </div>
+
+      <h3><?= htmlspecialchars($row['item_name']) ?></h3>
+
+      <?php if (!empty($row['image'])): ?>
+        <img src="uploads/<?= htmlspecialchars($row['image']) ?>" alt="Item Image" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
+      <?php endif; ?>
+
+      <p><strong>Date:</strong>
+        <?= $type === 'lost' ? htmlspecialchars($row['date_lost']) : htmlspecialchars($row['date_found']) ?>
+      </p>
+      <p><strong>Location:</strong> <?= htmlspecialchars($row['location']) ?></p>
+      <p><?= htmlspecialchars($row['description']) ?></p>
+      <p><strong>Status:</strong> <?= isset($row['status']) && $row['status'] !== null ? htmlspecialchars($row['status']) : 'N/A' ?></p>
+
+      <?php if (isset($_SESSION['username']) && isset($row['username']) && $_SESSION['username'] === $row['username']): ?>
+        <a href="<?= $type === 'lost' ? 'edit-lost.php' : 'edit-found.php' ?>?id=<?= $row['id'] ?>" class="header-link" style="margin-top:10px; display:inline-block; margin-right:10px;">Edit</a>
+
+        <form method="POST" action="delete-report.php" onsubmit="return confirm('Are you sure you want to delete this report?');" class="inline-form">
+          <input type="hidden" name="id" value="<?= $row['id'] ?>">
+          <input type="hidden" name="type" value="<?= $type ?>">
+          <input type="hidden" name="status" value="<?= htmlspecialchars($_GET['status'] ?? '') ?>">
+          <button type="submit" class="delete-button" style="background-color:#ff5722; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:4px;">Delete</button>
+        </form>
+      <?php endif; ?>
     </div>
-  </main>
-  <footer>&copy; 2025 Shabab Lost & Found Assistant.</footer>
+  <?php endwhile; ?>
+<?php elseif ($_SERVER["REQUEST_METHOD"] == "GET"): ?>
+  <p>No results found.</p>
+<?php endif; ?>
+</div>
+
+</main>
+
+<?php include 'footer.php'; ?>
 </body>
 </html>
-
