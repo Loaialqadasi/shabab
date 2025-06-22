@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Items | Shabab Lost & Found Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><b>Shabab Lost & Found Assistant</b></header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="report-lost.html">Report Lost</a>
+    <a href="report-found.html">Report Found</a>
+    <a href="search.html">Search</a>
+  </nav>
+  <main>
+    <h2>Search Lost/Found Items</h2>
+    <form id="search-form" action="search.php" method="GET">
+      <input type="text" name="query" placeholder="Search for items...">
+      <select name="type">
+        <option value="lost">Lost</option>
+        <option value="found">Found</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <div id="search-results">
+   
+    </div>
+  </main>
+  <footer>&copy; 2025 Shabab Lost & Found Assistant.</footer>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: shabab-lost-and-found
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true

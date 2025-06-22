@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shabab Lost & Found Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Font for curvy header -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top-right Login/Register Buttons -->
+  <div class="top-right-buttons">
+    <a href="login.html" class="header-link">Login</a>
+    <a href="register.html" class="header-link">Register</a>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <b>Shabab Lost & Found Assistant</b>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="report-lost.html">Report Lost</a>
+    <a href="report-found.html">Report Found</a>
+    <a href="search.html">Search</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <h2><b>Welcome to Shabab Lost & Found</b></h2>
+
+    <p class="intro">
+      Quickly report or search for lost and found items on campus.
+    </p>
+
+    <p class="intro">
+      Our platform helps Shabab community members stay connected and reclaim their valuables.
+    </p>
+
+    <!-- Recent Reports Section -->
+    <section id="recent-reports">
+
+      <!-- Found Item -->
+      <div class="report-card red-box">
+        <h3>📦 Found: Black Wallet</h3>
+        <p>Found at Library Level 3. Contains Shabab ID.</p>
+        <small>June 5, 2025</small>
+      </div>
+
+      <!-- Lost Item -->
+      <div class="report-card red-box">
+        <h3>🔍 Lost: Blue Water Bottle</h3>
+        <p>Last seen in N28 Cafeteria.</p>
+        <small>June 3, 2025</small>
+      </div>
+
+      <!-- Found Item -->
+      <div class="report-card red-box">
+        <h3>📦 Found: Wireless Earbuds</h3>
+        <p>Spotted in CS Block hallway.</p>
+        <small>June 4, 2025</small>
+      </div>
+
+      <!-- Claimed Item -->
+      <div class="report-card green-box">
+        <h3>✅ Lost: Red Backpack (Claimed)</h3>
+        <p>Last seen near Student Center. Case closed.</p>
+        <small>May 30, 2025</small>
+      </div>
+
+    </section>
+  </section>
+  </main>
+
+  <!-- AI Chat Icon Button -->
+  <button id="ai-chatbox-icon" title="Chat with Shabab AI">💬</button>
+  <!-- AI Chat Box -->
+  <div id="ai-chatbox-container" style="display:none;">
+    <div id="ai-chatbox-header">Ask Shabab AI <button id="ai-chatbox-close" title="Close">❌</button></div>
+    <div id="ai-chatbox-messages"></div>
+    <form id="ai-chatbox-form">
+      <input type="text" id="ai-chatbox-input" placeholder="Type your question..." autocomplete="off" required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <script>
+  // Chatbox open/close logic
+  const chatboxIcon = document.getElementById('ai-chatbox-icon');
+  const chatboxContainer = document.getElementById('ai-chatbox-container');
+  const chatboxClose = document.getElementById('ai-chatbox-close');
+  chatboxIcon.addEventListener('click', () => {
+    chatboxContainer.style.display = 'flex';
+    chatboxIcon.style.display = 'none';
+    setTimeout(() => { document.getElementById('ai-chatbox-input').focus(); }, 200);
+  });
+  chatboxClose.addEventListener('click', () => {
+    chatboxContainer.style.display = 'none';
+    chatboxIcon.style.display = 'block';
+  });
+
+  // Chatbox logic
+  const chatboxForm = document.getElementById('ai-chatbox-form');
+  const chatboxInput = document.getElementById('ai-chatbox-input');
+  const chatboxMessages = document.getElementById('ai-chatbox-messages');
+
+  chatboxForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const userMsg = chatboxInput.value.trim();
+    if (!userMsg) return;
+    appendMessage('You', userMsg, 'user');
+    chatboxInput.value = '';
+    chatboxInput.disabled = true;
+    try {
+      const res = await fetch('chatbot.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      });
+      const data = await res.json();
+      appendMessage('AI', data.reply || 'Sorry, I could not process your request.', 'ai');
+    } catch (err) {
+      appendMessage('AI', 'Error connecting to AI.', 'ai');
+    }
+    chatboxInput.disabled = false;
+    chatboxInput.focus();
+  });
+
+  function appendMessage(sender, text, type) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'ai-chatbox-msg ' + type;
+    msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatboxMessages.appendChild(msgDiv);
+    chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 UTM Shabab Lost & Found Assistant.
+  </footer>
+
+</body>
+</html>

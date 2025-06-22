@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Found Item | Shabab Lost & Found Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><b>Shabab Lost & Found Assistant</b></header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="report-lost.html">Report Lost</a>
+    <a href="report-found.html">Report Found</a>
+    <a href="search.html">Search</a>
+  </nav>
+  <main>
+    <h2>Report Found Item</h2>
+    <form action="report-found.php" method="POST" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Item Title" required>
+      <textarea name="description" placeholder="Describe the item" required></textarea>
+      <input type="text" name="location" placeholder="Found At Location" required>
+      <input type="date" name="date_found" required>
+      <input type="file" name="photo">
+      <button type="submit">Submit Report</button>
+    </form>
+  </main>
+  <footer>&copy; 2025 Shabab Lost & Found Assistant.</footer>
+</body>
+</html>
+
