@@ -21,7 +21,7 @@ $result = pg_query_params($conn, $sql, array($id));
 $item = pg_fetch_assoc($result); 
 
 // Check if the item exists and was submitted by the current user 
-if (!$item || $item['username'] !== $_SESSION['username']) { 
+if (!$item || $item['reported_by'] !== $_SESSION['username']) { 
     echo "Unauthorized access."; 
     exit; 
 } 
