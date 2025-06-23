@@ -20,7 +20,7 @@ $result = pg_query_params($conn, $sql, array($id));
 $item = pg_fetch_assoc($result); 
 
 // Check if the item exists and belongs to the user 
-if (!$item || $item['username'] !== $_SESSION['username']) { 
+if (!$item || $item['reported_by'] !== $_SESSION['username']) { 
     echo "Unauthorized access."; 
     exit; 
 } 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Optional delete
     if (isset($_POST['delete']) && $_POST['delete'] === '1') { 
-        $sql = "DELETE FROM lost_items WHERE id = $1 AND username = $2"; 
+        $sql = "DELETE FROM lost_items WHERE id = $1 AND reported_by = $2"; 
         $deleteResult = pg_query_params($conn, $sql, array($id, $_SESSION['username'])); 
         if (!$deleteResult) {
             echo "Delete failed: " . pg_last_error($conn);
