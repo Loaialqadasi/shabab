@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <form method="POST">
     <label for="status">Status:</label>
     <select name="status">
-      <option value="open" <?= $item['status'] == 'open' ? 'selected' : '' ?>>Open</option>
-      <option value="resolved" <?= $item['status'] == 'resolved' ? 'selected' : '' ?>>Resolved</option>
+      <option value="Open" <?= $item['status'] == 'Open' ? 'selected' : '' ?>>Open</option>
+      <option value="Resolved" <?= $item['status'] == 'Resolved' ? 'selected' : '' ?>>Resolved</option>
     </select>
     <button type="submit">Update</button>
   </form>
